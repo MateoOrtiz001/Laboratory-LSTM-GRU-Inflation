@@ -9,6 +9,14 @@ def softmax(x):
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
+def initialize_adam(parameters):
+    v = {}
+    s = {}
+    for key in parameters:
+        v[key] = np.zeros_like(parameters[key])
+        s[key] = np.zeros_like(parameters[key])
+    return v, s
+
 def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate=0.001,
                                 beta1=0.9, beta2=0.999, epsilon=1e-8):
     """
@@ -41,7 +49,6 @@ def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate=0.001,
             parameters[key] -= learning_rate * (v_corrected[key] / (np.sqrt(s_corrected[key]) + epsilon))
 
     return parameters, v, s
-
 
 def compute_cost(y_pred, y_true):
     """
