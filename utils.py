@@ -9,14 +9,38 @@ def softmax(x):
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-def initialize_adam(parameters):
-    v = {}
-    s = {}
-    for key in parameters:
-        v[key] = np.zeros_like(parameters[key])
-        s[key] = np.zeros_like(parameters[key])
-    return v, s
+def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate=0.001,
+                                beta1=0.9, beta2=0.999, epsilon=1e-8):
+    """
+    Actualiza parámetros usando Adam
 
+    Arguments:
+    parameters -- dict con llaves: 'Wf', 'bf', 'Wi', ...
+    grads -- dict con llaves: 'dWf', 'dbf', 'dWi', ...  (con prefijo 'd')
+    """
+    v_corrected = {}
+    s_corrected = {}
+
+    for key in parameters.keys():
+        grad_key = 'd' + key
+
+        if grad_key in grads:
+            # Inicializa v/s si no existen
+            if key not in v:
+                v[key] = np.zeros_like(parameters[key])
+            if key not in s:
+                s[key] = np.zeros_like(parameters[key])
+
+            # Usa grads[grad_key] en vez de grads[key]
+            v[key] = beta1 * v[key] + (1 - beta1) * grads[grad_key]
+            s[key] = beta2 * s[key] + (1 - beta2) * (grads[grad_key] ** 2)
+
+            v_corrected[key] = v[key] / (1 - beta1 ** t)
+            s_corrected[key] = s[key] / (1 - beta2 ** t)
+
+            parameters[key] -= learning_rate * (v_corrected[key] / (np.sqrt(s_corrected[key]) + epsilon))
+
+    return parameters, v, s
 
 
 def compute_cost(y_pred, y_true):
