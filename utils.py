@@ -76,7 +76,7 @@ def plot_training(costs):
     plt.plot(costs, linewidth=2)
     plt.xlabel('Época', fontsize=12)
     plt.ylabel('Costo (MSE)', fontsize=12)
-    plt.title('LSTM', fontsize=14)
+    plt.title('Función de pérdida durante entrenamiento', fontsize=14)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.show()
@@ -140,3 +140,26 @@ def reshape_for_lstm(X, y):
     y_reshaped = y.reshape(1, y.shape[0], 1)
 
     return X_reshaped, y_reshaped
+
+def denormalize_predictions(predictions_scaled, scaler):
+    """
+    Convierte predicciones normalizadas de vuelta a escala original
+
+    Argumentos:
+    predictions_scaled -- predicciones en escala normalizada
+    scaler -- objeto StandardScaler usado en normalización
+
+    Retorna:
+    predictions_original -- predicciones en escala original
+    """
+    # StandardScaler inverse_transform espera la misma forma que fit_transform
+    # Si predictions_scaled es 1D, lo remodelamos a 2D (n_samples, 1)
+    if len(predictions_scaled.shape) == 1:
+        predictions_scaled_reshaped = predictions_scaled.reshape(-1, 1)
+    else:
+        # Si ya tiene la forma correcta (por ejemplo, (n_samples, 1)), la usamos directamente
+        predictions_scaled_reshaped = predictions_scaled
+
+    # Invertir normalización
+    predictions_original = scaler.inverse_transform(predictions_scaled_reshaped)
+    return predictions_original
