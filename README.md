@@ -38,4 +38,4 @@ Para el uso del laboratorio puede usar el cuaderno de dos formas:
  ```bash
 git clone https://github.com/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation
 cd Laboratory-LSTM-GRU-Inflation
-jupyter notebook ```
+jupyter notebook 
