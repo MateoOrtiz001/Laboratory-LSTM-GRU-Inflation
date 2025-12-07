@@ -170,7 +170,7 @@ def lstm_forward_test(lstm_forward):
 
     assert h.shape == (n_h, m, T_x)
     assert c.shape == (n_h, m, T_x)
-    assert y.shape == (n_y, m, 1)
+    assert y.shape == (n_y, m)
     assert np.allclose(h, h_exp)
     assert np.allclose(c, c_exp)
     assert np.allclose(y, y_exp)
@@ -486,30 +486,30 @@ def gru_backward_test(gru_backward, gru_cell_backward, gru_cell_forward):
     dh_prevt = np.zeros((n_h, m))
     dWu_exp = np.zeros((n_h, n_h + n_x))
     dWr_exp = np.zeros((n_h, n_h + n_x))
-    dWc_exp = np.zeros((n_h, n_h + n_x))
+    dWh_exp = np.zeros((n_h, n_h + n_x))
     dbu_exp = np.zeros((n_h, 1))
     dbr_exp = np.zeros((n_h, 1))
-    dbc_exp = np.zeros((n_h, 1))
+    dbh_exp = np.zeros((n_h, 1))
     for t in reversed(range(T_x)):
         g = gru_cell_backward(dh[:, :, t] + dh_prevt, caches_list[t])
         dh_prevt = g["dh_prev"]
         dx_exp[:, :, t] = g["dxt"]
         dWu_exp += g["dWu"]
         dWr_exp += g["dWr"]
-        dWc_exp += g["dWc"]
+        dWh_exp += g["dWh"]
         dbu_exp += g["dbu"]
         dbr_exp += g["dbr"]
-        dbc_exp += g["dbc"]
-    dWu_exp /= m; dWr_exp /= m; dWc_exp /= m
-    dbu_exp /= m; dbr_exp /= m; dbc_exp /= m
+        dbh_exp += g["dbh"]
+    dWu_exp /= m; dWr_exp /= m; dWh_exp /= m
+    dbu_exp /= m; dbr_exp /= m; dbh_exp /= m
 
     assert np.allclose(grads["dx"], dx_exp)
     assert np.allclose(grads["dWu"], dWu_exp)
     assert np.allclose(grads["dWr"], dWr_exp)
-    assert np.allclose(grads["dWc"], dWc_exp)
+    assert np.allclose(grads["dWh"], dWh_exp)
     assert np.allclose(grads["dbu"], dbu_exp)
     assert np.allclose(grads["dbr"], dbr_exp)
-    assert np.allclose(grads["dbc"], dbc_exp)
+    assert np.allclose(grads["dbh"], dbh_exp)
     print('\033[92mTest Aprobado\033[0m')
 
 
