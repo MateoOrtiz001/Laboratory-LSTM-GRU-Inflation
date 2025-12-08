@@ -320,8 +320,8 @@ def model_lstm_adam_test(model_lstm_adam):
 
 def predict_lstm_test(predict_lstm):
     np.random.seed(12)
-    n_x, m, T_x, n_h, n_y = 1, 2, 3, 2, 1
-    x = np.random.randn(n_x, m, T_x)
+    n_x, m, T_x, n_h, n_y = 1, 1, 3, 2, 1
+    window = np.random.randn(n_x, m, T_x)
     parameters = {
         "Wf": np.random.randn(n_h, n_h + n_x),
         "bf": np.random.randn(n_h, 1),
@@ -335,22 +335,26 @@ def predict_lstm_test(predict_lstm):
         "by": np.random.randn(n_y, 1),
     }
 
-    # Manual forward
-    h_next = np.zeros((n_h, m))
-    c_next = np.zeros((n_h, m))
-    for t in range(T_x):
-        concat = np.concatenate((h_next, x[:, :, t]))
-        ft = sigmoid(np.dot(parameters["Wf"], concat) + parameters["bf"])
-        ut = sigmoid(np.dot(parameters["Wu"], concat) + parameters["bu"])
-        cct = np.tanh(np.dot(parameters["Wc"], concat) + parameters["bc"])
-        c_next = ft * c_next + ut * cct
-        ot = sigmoid(np.dot(parameters["Wo"], concat) + parameters["bo"])
-        h_next = ot * np.tanh(c_next)
-    y_exp = np.dot(parameters['Wy'], h_next) + parameters['by']
+    class _IdentityScaler:
+        def inverse_transform(self, arr):
+            return arr
 
-    y_pred = predict_lstm(x, parameters)
-    assert y_pred.shape == (n_y, m)
-    assert np.allclose(y_pred, y_exp)
+    # Inyectar scaler identidad para la función bajo prueba
+    globals()['scaler'] = _IdentityScaler()
+
+    steps = 3
+    expected_scaled = []
+    h0 = np.zeros((n_h, 1))
+    wcopy = window.copy()
+    for _ in range(steps):
+        h, y, c, caches = predict_lstm.__globals__['lstm_forward'](wcopy, h0, parameters)
+        expected_scaled.append(y.flatten()[0])
+        new_window_values = np.append(wcopy.flatten()[1:], y.flatten())
+        wcopy = new_window_values.reshape(1, 1, T_x)
+
+    y_pred = predict_lstm(window, parameters, steps)
+    assert y_pred.shape == (steps,)
+    assert np.allclose(y_pred, np.array(expected_scaled))
     print('\033[92mTest Aprobado\033[0m')
 
 
@@ -540,8 +544,8 @@ def model_gru_adam_test(model_gru_adam):
 
 def predict_gru_test(predict_gru):
     np.random.seed(18)
-    n_x, m, T_x, n_h, n_y = 1, 2, 3, 2, 1
-    x = np.random.randn(n_x, m, T_x)
+    n_x, m, T_x, n_h, n_y = 1, 1, 3, 2, 1
+    window = np.random.randn(n_x, m, T_x)
     parameters = {
         "Wu": np.random.randn(n_h, n_h + n_x),
         "bu": np.random.randn(n_h, 1),
@@ -553,16 +557,29 @@ def predict_gru_test(predict_gru):
         "by": np.random.randn(n_y, 1),
     }
 
-    h_next = np.zeros((n_h, m))
-    for t in range(T_x):
-        concat = np.concatenate((h_next, x[:, :, t]))
-        ut = _sigmoid(np.dot(parameters["Wu"], concat) + parameters["bu"])
-        rt = _sigmoid(np.dot(parameters["Wr"], concat) + parameters["br"])
-        hht = np.tanh(np.dot(parameters["Wh"], np.concatenate((rt * h_next, x[:, :, t]))) + parameters["bh"])
-        h_next = (1 - ut) * h_next + ut * hht
-    y_exp = np.dot(parameters['Wy'], h_next) + parameters['by']
+    class _IdentityScaler:
+        def inverse_transform(self, arr):
+            return arr
 
-    y_pred = predict_gru(x, parameters)
-    assert y_pred.shape == (n_y, m)
-    assert np.allclose(y_pred, y_exp)
+    globals()['scaler'] = _IdentityScaler()
+
+    steps = 2
+    expected_scaled = []
+    wcopy = window.copy()
+    h_next = np.zeros((n_h, m))
+    for _ in range(steps):
+        for t in range(T_x):
+            concat = np.concatenate((h_next, wcopy[:, :, t]))
+            ut = sigmoid(np.dot(parameters["Wu"], concat) + parameters["bu"])
+            rt = sigmoid(np.dot(parameters["Wr"], concat) + parameters["br"])
+            hht = np.tanh(np.dot(parameters["Wh"], np.concatenate((rt * h_next, wcopy[:, :, t]))) + parameters["bh"])
+            h_next = (1 - ut) * h_next + ut * hht
+        y_step = np.dot(parameters['Wy'], h_next) + parameters['by']
+        expected_scaled.append(y_step.flatten()[0])
+        new_window_values = np.append(wcopy.flatten()[1:], y_step.flatten())
+        wcopy = new_window_values.reshape(1, 1, T_x)
+
+    y_pred = predict_gru(window, parameters, steps)
+    assert y_pred.shape == (steps,)
+    assert np.allclose(y_pred, np.array(expected_scaled))
     print('\033[92mTest Aprobado\033[0m')
