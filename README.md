@@ -31,9 +31,7 @@ El cuaderno está distribuido de la siguiente manera.
 
 ## Instrucciones de uso
 Para el uso del laboratorio puede usar el cuaderno de dos formas:
--  Copiar el cuaderno de Google Colab y correrlo en la nube: abrir el archivo oprimiendo el botón <a href="https://colab.research.google.com/github/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation/blob/main/Laboratorio_LSTM_GRU_Inflacion.ipynb" target="_blank">
-    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>.
+- Copiar el cuaderno de Google Colab y correrlo en la nube: abrir el archivo oprimiendo el botón [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation/blob/main/Lab_LSTM_GRU_Inflacion.ipynb)
 -  Descargar el repositorio y ejecutar localmente con Jupyter notebook: ejecuta localmente
  ```bash
 git clone https://github.com/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation
