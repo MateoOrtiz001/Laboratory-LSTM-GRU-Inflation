@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 
-Este repositorio contiene un laboratorio en notebook de Google Colab escrito en Python `Laboratorio-LSTM-GRU-Inflacion-ipynb` diseñado para aprender las arquitecturas de redes neuronales recurrentes LSTM y GRU aplicados a modelar y predecir la inflación en Colombia.
+Este repositorio contiene un laboratorio en notebook de Google Colab escrito en Python `Lab-LSTM-GRU-Inflacion-ipynb` diseñado para aprender las arquitecturas de redes neuronales recurrentes LSTM y GRU aplicados a modelar y predecir la inflación en Colombia.
 
 ## Contenido del laboratorio
 El cuaderno está distribuido de la siguiente manera. 
