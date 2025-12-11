@@ -2,7 +2,9 @@
 ![Stars](https://img.shields.io/github/stars/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation?style=social)
 ![Watchers](https://img.shields.io/github/watchers/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation?style=social)
 ![Python](https://img.shields.io/badge/Python-3.10-blue.svg?logo=python)
-![Status](https://img.shields.io/badge/Status-In_Development-yellow)
+![Status](https://img.shields.io/badge/Status-Stable-brightgreen)
+![Version](https://img.shields.io/badge/Version-1.0-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 
 Este repositorio contiene un laboratorio en notebook de Google Colab escrito en Python `Laboratorio-LSTM-GRU-Inflacion-ipynb` diseñado para aprender las arquitecturas de redes neuronales recurrentes LSTM y GRU aplicados a modelar y predecir la inflación en Colombia.
@@ -35,5 +37,5 @@ Para el uso del laboratorio puede usar el cuaderno de dos formas:
 -  Descargar el repositorio y ejecutar localmente con Jupyter notebook: ejecuta localmente
  ```bash
 git clone https://github.com/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation
-cd Laboratory-LSTM-GRU-Inflation
+cd Lab-LSTM-GRU-Inflation
 jupyter notebook 
