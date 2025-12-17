@@ -38,4 +38,14 @@ Para el uso del laboratorio puede usar el cuaderno de dos formas:
  ```bash
 git clone https://github.com/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation
 cd Lab-LSTM-GRU-Inflation
-jupyter notebook 
+jupyter notebook
+```
+
+## Soporte y contribuciones
+Este laboratorio es un proyecto educativo en constante mejora. Tu feedback y contribuciones son valiosos.
+### ¿Encontraste un error o tienes una sugerencia?
+1.  **Issues**: La forma más directa es abrir un [Issue](https://github.com/MateoOrtiz001/Laboratory-LSTM-GRU-Inflation/issues) en este repositorio. Por favor, describe el problema o idea con el mayor detalle posible.
+2.  **Contacto**: También puedes contactarme directamente a través de mi perfil de GitHub @MateoOrtiz001.
+
+## Licencia
+Este proyecto está bajo la lincecia del [MIT](https://github.com/MateoOrtiz001/BattleCity_RL_agent?tab=MIT-1-ov-file#readme)
