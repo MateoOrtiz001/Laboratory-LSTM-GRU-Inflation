@@ -298,9 +298,17 @@ def initialize_LSTM_parameters_test(initialize_LSTM_parameters):
     assert set(params.keys()) == expected_keys
     assert params["Wf"].shape == (n_h, n_h + n_x)
     assert params["Wy"].shape == (n_y, n_h)
+    W_rec = params["Wf"][:, :n_h]
+    assert np.allclose(W_rec.T @ W_rec, np.eye(n_h), atol=1e-6), \
+        "La parte recurrente de Wf no es ortogonal"
+    W_ker = params["Wf"][:, n_h:]
     std_expected = np.sqrt(2.0 / (n_h + n_x))
-    assert np.isclose(params["Wf"].std(), std_expected, rtol=0.3)
-    assert np.all(params["bf"] == 0)
+    assert np.isclose(W_ker.std(), std_expected, rtol=0.3), \
+        "La parte kernel de Wf no sigue la inicialización Xavier-Glorot"
+    assert np.all(params["bf"] == 1), "bf debe inicializarse en 1"
+    for key in ["bu", "bc", "bo", "by"]:
+        assert np.all(params[key] == 0), f"{key} debe inicializarse en 0"
+
     print('\033[92mTest Aprobado\033[0m')
 
 
@@ -582,4 +590,5 @@ def predict_gru_test(predict_gru):
     y_pred = predict_gru(window, parameters, steps)
     assert y_pred.shape == (steps,)
     assert np.allclose(y_pred, np.array(expected_scaled))
+
     print('\033[92mTest Aprobado\033[0m')
